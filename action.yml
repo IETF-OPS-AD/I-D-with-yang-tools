@@ -1,0 +1,49 @@
+# SPDX-FileCopyrightText: 2025 IETF
+# SPDX-License-Identifier: 0BSD
+
+name: 'YANG Actions'
+
+runs:
+  using: 'composite'
+  steps:
+  - name: "Checkout"
+    uses: actions/checkout@v4
+    with:
+      token: ${{ github.token }}
+
+  - name: Set up Python
+    uses: actions/setup-python@v5
+    with:
+      python-version: '3.11'
+
+  - name: "Install pyang"
+    run: |
+      python -m pip install --upgrade pip
+      pip install pyang
+    shell: bash
+
+  - name: "Setting up pyang"
+    run: make -f ${GITHUB_ACTION_PATH}/yang.mk pyang-setup
+    shell: bash
+
+  - name: "Lint using pyang"
+    run: make -f ${GITHUB_ACTION_PATH}/yang.mk pyang-lint
+    shell: bash
+      
+  - name: "Generate YANG trees"
+    run: make -f ${GITHUB_ACTION_PATH}/yang.mk yang-gen-tree
+    shell: bash
+
+  - name: "Commit and push tree files"
+    run: |
+      git config user.name 'Yang Bot'
+      git config user.email 'yangbot@example.com'
+      git add yang/trees/*.tree
+      if ! git diff --quiet || ! git diff --staged --quiet; then
+        git commit -m "Auto-generating YANG trees"
+        git push
+      else
+        echo "No changes to commit"
+      fi
+    shell: bash
+
