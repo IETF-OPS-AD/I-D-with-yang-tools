@@ -20,6 +20,7 @@ runs:
     run: |
       python -m pip install --upgrade pip
       pip install pyang
+      pip install yangson      
     shell: bash
 
   - name: "Setting up pyang"
@@ -47,3 +48,6 @@ runs:
       fi
     shell: bash
 
+  - name: "Validate JSON examples that require so"
+    run: make -f ${GITHUB_ACTION_PATH}/yang.mk yangson-validate
+    shell: bash
