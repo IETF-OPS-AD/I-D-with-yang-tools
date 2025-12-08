@@ -5,7 +5,7 @@ SHELL := bash
 
 YANGDIR ?= ./yang
 EXDIR ?= ./yang/examples
-YANGSONLIB ?=$(YANGDIR)/tools/yang-library.json
+YANGSONLIB ?=$(YANGDIR)/yang-library.json
 
 STDYANGDIR ?= ./yang/models
 $(STDYANGDIR):
