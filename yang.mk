@@ -56,4 +56,9 @@ yang-clean:
 FORCE:
 
 $(YANGDIR)/trees/%.tree: $(YANGDIR)/%.yang $(YANGDIR)/trees FORCE
-	pyang $(PYANG_OPTIONS) -p $(YANG_PATH) $< > $@
+	@output=$$(pyang $(OPTIONS) -p $(YANG_PATH) $< ); \
+        if [ -n "$$output" ]; then \
+          echo "$$output" > $@; \
+        else \
+          echo "Skipping empty tree $<" >&2; \
+        fi
